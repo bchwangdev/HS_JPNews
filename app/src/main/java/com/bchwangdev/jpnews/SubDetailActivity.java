@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.util.Linkify;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -33,11 +36,12 @@ import java.util.ArrayList;
 public class SubDetailActivity extends AppCompatActivity {
     String detailUrl, commentUrl, iFrameUrl, iFUrlTopicId, iFUrlFullPageUrl, iFUrlSpaceId;
     String strNewsDImage, strNewsDTitle, strNewsDContent, strNewsDDate, strNewsDCompany;
-    float textSize;
 
-    TextView tvNewsDTitle, tvNewsDContent, tvNewsDDate, tvNewsDCompany;
-    TextView tvCommentNickName,tvCommentDate,tvCommentContent,tvCommentGood,tvCommentBad;
+    TextView tvNewsDTitle, tvNewsDContent, tvNewsDDate, tvNewsDCompany, tvNewsDLink;
+    TextView tvCommentNickName, tvCommentDate, tvCommentContent, tvCommentGood, tvCommentBad;
     ImageView ivNewsDImage;
+
+    Toast toast;
 
     AdView mAdView;
     Toolbar toolbar;
@@ -46,6 +50,11 @@ public class SubDetailActivity extends AppCompatActivity {
     SubDetailCommentAdapter sAdapter;
 
     ArrayList<mComment> arrComment = new ArrayList<>();
+
+    //환경설정 데이터
+    SharedPreferences setting;
+    SharedPreferences.Editor editor;
+    static float textSize;
 
     //툴바표시하기
     @Override
@@ -59,26 +68,22 @@ public class SubDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(this, "뒤로 가기", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
-//            case R.id.btnTextSizeUp:
-//            case R.id.btnTextSizeDown:
-//                if (item.getItemId() == R.id.btnTextSizeUp) {
-//                    tvNewsDTitle.setTextSize(tvNewsDTitle.getTextSize() + 1);
-//                    textSize = tvNewsDContent.getTextSize() + 1;
-//                } else {
-//                    tvNewsDTitle.setTextSize(tvNewsDTitle.getTextSize() - 1);
-//                    textSize = tvNewsDContent.getTextSize() - 1;
-//                }
-//                tvNewsDContent.setTextSize(textSize);
-//                tvNewsDDate.setTextSize(textSize);
-//                tvNewsDCompany.setTextSize(textSize);
-//                tvCommentNickName.setTextSize(textSize);
-//                tvCommentDate.setTextSize(textSize);
-//                tvCommentContent.setTextSize(textSize);
-//                tvCommentGood.setTextSize(textSize);
-//                tvCommentBad.setTextSize(textSize);
-//                break;
+            case R.id.btnTextSize:
+                textSize += 1.5;
+                if (textSize > 30) textSize = 20;
+                //토스트출력
+                toast.cancel();
+                toast = Toast.makeText(this, textSize + "", Toast.LENGTH_SHORT);
+                toast.show();
+                //본문 텍스트크기변경
+                tvNewsDContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                tvNewsDDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                tvNewsDCompany.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                //★댓글 리사이클뷰의 텍스트크기 변경하기
+                sAdapter.notifyDataSetChanged();
+                break;
             case R.id.btnStar:
                 //★데이터베이스
                 //폴더 가져오기
@@ -102,11 +107,24 @@ public class SubDetailActivity extends AppCompatActivity {
         tvNewsDContent = findViewById(R.id.tvNewsDContent);
         tvNewsDDate = findViewById(R.id.tvNewsDDate);
         tvNewsDCompany = findViewById(R.id.tvNewsDCompany);
+        tvNewsDLink = findViewById(R.id.tvNewsDLink);
         tvCommentNickName = findViewById(R.id.tvCommentNickName);
         tvCommentDate = findViewById(R.id.tvCommentDate);
         tvCommentContent = findViewById(R.id.tvCommentContent);
         tvCommentGood = findViewById(R.id.tvCommentGood);
         tvCommentBad = findViewById(R.id.tvCommentBad);
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+
+        //▼프리퍼런스 설정정보
+        setting = getSharedPreferences("setting", MODE_PRIVATE);
+        editor = setting.edit();
+        //프리퍼런스 텍스트크기
+        textSize = setting.getFloat("textSize", 23);
+        //글자크기 지정
+        tvNewsDContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        tvNewsDDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        tvNewsDCompany.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        tvNewsDLink.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
 
         //광고
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -159,6 +177,9 @@ public class SubDetailActivity extends AppCompatActivity {
             tvNewsDContent.setText(strNewsDContent.replace("　", "\n \n"));
             tvNewsDCompany.setText(strNewsDCompany);
             tvNewsDDate.setText(strNewsDDate);
+            //Url클릭 인터넷 바로 가기
+            tvNewsDLink.setText(detailUrl);
+            Linkify.addLinks(tvNewsDLink, Linkify.WEB_URLS);
         }
 
         @Override
@@ -214,5 +235,13 @@ public class SubDetailActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //텍스트크기 기억
+        editor.putFloat("textSize", textSize);
+        editor.commit();
     }
 }

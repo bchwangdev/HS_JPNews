@@ -1,6 +1,7 @@
 package com.bchwangdev.jpnews;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 public class SubDetailCommentAdapter extends RecyclerView.Adapter<SubDetailCommentAdapter.ViewHolder>{
 
+    private float mTextSize;
     //아이템리스트
     private ArrayList<mComment> mData = new ArrayList<>();
 
@@ -23,19 +25,6 @@ public class SubDetailCommentAdapter extends RecyclerView.Adapter<SubDetailComme
     public SubDetailCommentAdapter(ArrayList<mComment> mData) {
         this.mData = mData;
     }
-
-    //클릭리스너 등록
-    private SubDetailCommentAdapter.OnItemClickListener mListner;
-
-    public interface OnItemClickListener {
-        void onTextSizeUp();
-        void onTextSizeDown();
-    }
-
-    public void setOnClickListener3(SubDetailCommentAdapter.OnItemClickListener listener) {
-        mListner = listener;
-    }
-
 
     @NonNull
     @Override
@@ -55,6 +44,13 @@ public class SubDetailCommentAdapter extends RecyclerView.Adapter<SubDetailComme
         holder.tvCommentGood.setText(item.getGood());
         holder.tvCommentBad.setText(item.getBad());
         holder.tvCommentContent.setText(item.getContent());
+        //★텍스트크기 변경하기
+        mTextSize = SubDetailActivity.textSize;
+        holder.tvCommentNickName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mTextSize);
+        holder.tvCommentDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mTextSize);
+        holder.tvCommentGood.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mTextSize);
+        holder.tvCommentBad.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mTextSize);
+        holder.tvCommentContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mTextSize);
     }
 
     @Override
@@ -79,4 +75,5 @@ public class SubDetailCommentAdapter extends RecyclerView.Adapter<SubDetailComme
             tvCommentContent = itemView.findViewById(R.id.tvCommentContent);
         }
     }
+
 }

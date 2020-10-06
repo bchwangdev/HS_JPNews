@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,9 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -81,10 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressBar = findViewById(R.id.progressBar);
-        btnRefresh = findViewById(R.id.btnRefresh);
-
-        //인터넷연결확인
+        //▼인터넷연결확인
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() == null) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -96,7 +89,11 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             return;
         }
 
-        //광고
+        //▼findViewById
+        progressBar = findViewById(R.id.progressBar);
+        btnRefresh = findViewById(R.id.btnRefresh);
+
+        //▼광고
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -106,20 +103,19 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         mAdView = findViewById(R.id.adView);
         mAdView.loadAd(adRequest);
 
-        //툴바
+        //▼툴바
         toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
-        //리사이클러뷰 설정
+        //▼리사이클러뷰 설정
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);//옵션
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //어답터 세팅
         mAdapter = new MainAdapter(arrNewsH);
         mAdapter.setOnClickListener2(this);
         recyclerView.setAdapter(mAdapter);
 
-        //데이터가져오기
+        //▼데이터가져오기
         JsoupAsyncTask jsoup = new JsoupAsyncTask();
         jsoup.execute();
     }
@@ -148,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             progressBar.setVisibility(View.VISIBLE);
             progressBar.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in));
         }
+
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
@@ -156,10 +153,12 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             progressBar.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
             mAdapter.notifyDataSetChanged();
         }
+
         @Override
         protected void onCancelled() {
             super.onCancelled();
         }
+
         @Override
         protected Object doInBackground(Object[] objects) {
             try {

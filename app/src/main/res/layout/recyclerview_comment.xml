@@ -31,8 +31,7 @@
             <TextView
                 android:id="@+id/tvCommentNickName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="24dp" />
+                android:layout_height="wrap_content"/>
 
             <!-- 경계선 | -->
             <TextView
@@ -41,8 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="|"
-                android:textSize="24dp" />
+                android:text="|"/>
 
 
             <!-- 작성일 -->
@@ -50,7 +48,7 @@
                 android:id="@+id/tvCommentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24dp" />
+                />
 
 
         </LinearLayout>
@@ -60,8 +58,7 @@
             android:id="@+id/tvCommentContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="안녕하셍"
-            android:textSize="24dp" />
+            android:text="안녕하셍"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,8 +78,7 @@
                 android:id="@+id/tvCommentGood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="24dp" />
+                android:text="1"/>
 
             <!-- 비추천이미지 -->
             <ImageView
@@ -98,8 +94,7 @@
                 android:id="@+id/tvCommentBad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="44"
-                android:textSize="24dp" />
+                android:text="44" />
         </LinearLayout>
     </LinearLayout>
 
