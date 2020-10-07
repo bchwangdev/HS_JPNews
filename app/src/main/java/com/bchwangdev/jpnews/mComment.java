@@ -1,14 +1,31 @@
 package com.bchwangdev.jpnews;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "newsComment")
 public class mComment {
-    String Image;
-    String NickName;
-    String Date;
-    String Content;
-    String Good;
-    String Bad;
+    @PrimaryKey(autoGenerate = true)
+    private Integer Id;
+    private Integer ParentId;
+    private String Image;
+    private String NickName;
+    private String Date;
+    private String Content;
+    private String Good;
+    private String Bad;
 
     public mComment() {
+    }
+
+    public mComment(Integer parentId, String image, String nickName, String date, String content, String good, String bad) {
+        ParentId = parentId;
+        Image = image;
+        NickName = nickName;
+        Date = date;
+        Content = content;
+        Good = good;
+        Bad = bad;
     }
 
     public mComment(String image, String nickName, String date, String content, String good, String bad) {

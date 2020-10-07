@@ -3,14 +3,15 @@ package com.bchwangdev.jpnews;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,11 +49,12 @@ public class SubDetailActivity extends AppCompatActivity {
 
     Toast toast;
 
-    AdView mAdView;
+    AdView adView2;
     Toolbar toolbar;
+    Menu menu;
 
     RecyclerView recyclerView;
-    SubDetailCommentAdapter sAdapter;
+    SubDetailCommentAdapter adapter;
 
     ArrayList<mComment> arrComment = new ArrayList<>();
 
@@ -62,13 +64,14 @@ public class SubDetailActivity extends AppCompatActivity {
     static float textSize;
 
     //데이터베이스
-    SQLiteDatabase sqLiteDatabase;
-    String strDbName = "news", strTbName = "news";
+    mNewsDatabase db;
+    boolean firstDb = true;
 
     //툴바표시하기
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -91,21 +94,27 @@ public class SubDetailActivity extends AppCompatActivity {
                 tvNewsDDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
                 tvNewsDCompany.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
                 //★댓글 리사이클뷰의 텍스트크기 변경하기
-                sAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 break;
-            case R.id.btnStar:
-                //★데이터베이스
-//                sqLiteDatabase = openOrCreateDatabase(strDbName, MODE_PRIVATE, null);
-//                sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + strTbName +
-//                        "(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-//                        "Title TEXT, " + "Content TEXT, " +"Image TEXT, "+"Company TEXT, "+"Date TEXT, "+"DetailUrl TEXT, "+
-//                        "grade TEXT);");
-                //폴더 가져오기
-//                Intent myFileIntent = new Intent(this, FolderActivity.class);
-//                startActivityForResult(myFileIntent, 1);
-//                //광고 표시
-//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//                mInterstitialAd.show();
+            case R.id.btnNewsSave:
+                if (firstDb) {
+                    firstDb = false;
+                    //★데이터베이스 저장
+                    db = Room.databaseBuilder(this, mNewsDatabase.class, "news").allowMainThreadQueries().build();
+                    mNews temp = new mNews();
+                    temp.setImage(strNewsDImage);
+                    temp.setTitle(strNewsDTitle);
+                    temp.setCompany(strNewsDCompany);
+                    temp.setContent(strNewsDContent);
+                    temp.setDate(strNewsDDate);
+                    temp.setDetailUrl(detailUrl);
+                    long aa = db.mNewsDao().insert(temp);
+                    //툴바 이미지 변경
+                    menu.findItem(R.id.btnNewsSave).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_star_black_24dp));
+
+                }else{
+                    Toast.makeText(this, "Already Saved", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -156,11 +165,11 @@ public class SubDetailActivity extends AppCompatActivity {
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView = findViewById(R.id.adView);
-        mAdView.loadAd(adRequest);
+        adView2 = findViewById(R.id.adView2);
+        adView2.loadAd(adRequest);
 
         //▼툴바
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar2);
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
@@ -177,8 +186,8 @@ public class SubDetailActivity extends AppCompatActivity {
         //리스트 항목에 구분선 넣어주기
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); //색상지정없을때
         //어답터 세팅
-        sAdapter = new SubDetailCommentAdapter(arrComment);
-        recyclerView.setAdapter(sAdapter);
+        adapter = new SubDetailCommentAdapter(arrComment);
+        recyclerView.setAdapter(adapter);
 
         //▼데이터 가져오기
         SubDetailActivity.JsoupAsyncTask jsoup = new SubDetailActivity.JsoupAsyncTask();
@@ -200,13 +209,16 @@ public class SubDetailActivity extends AppCompatActivity {
             //데이터표시하기
             Picasso.get().load(strNewsDImage).into(ivNewsDImage);
             tvNewsDTitle.setText(strNewsDTitle);
-            tvNewsDContent.setText(strNewsDContent.replace("。", "。\n \n").replace("」","」\n \n"));
+            tvNewsDContent.setText(strNewsDContent);
             tvNewsDCompany.setText(strNewsDCompany);
             tvNewsDDate.setText(strNewsDDate);
             //Url클릭 인터넷 바로 가기
             tvNewsDLink.setText(detailUrl);
             Linkify.addLinks(tvNewsDLink, Linkify.WEB_URLS);
-            sAdapter.notifyDataSetChanged();
+            //버튼보이기
+            menu.findItem(R.id.btnNewsSave).setVisible(true);
+            menu.findItem(R.id.btnTextSize).setVisible(true);
+            adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -222,7 +234,7 @@ public class SubDetailActivity extends AppCompatActivity {
                 Elements data = doc1.select("article");
                 strNewsDImage = doc1.select("meta[property=og:image]").attr("content");
                 strNewsDTitle = data.select(".sc-epnACN").text();
-                strNewsDContent = data.select(".article_body").select("p").select(".sc-gGBfsJ").text();
+                strNewsDContent = data.select(".article_body").select("p").select(".sc-gGBfsJ").text().replace("。", "。\n \n").replace("」", "」\n \n");
                 strNewsDDate = data.select("footer").select("time").text();
                 strNewsDCompany = data.select("footer").select("a").text();
 

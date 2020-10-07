@@ -15,43 +15,42 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class SubFavoriteAdapter extends RecyclerView.Adapter<SubFavoriteAdapter.ViewHolder> {
 
     //아이템리스트
     private ArrayList<mNews> mData = new ArrayList<>();
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    public MainAdapter(ArrayList<mNews> mData) {
+    public SubFavoriteAdapter(ArrayList<mNews> mData) {
         this.mData = mData;
     }
 
     //클릭리스너 등록
-    private OnItemClickListener mListner;
+    private SubFavoriteAdapter.OnItemClickListener mListner;
 
     public interface OnItemClickListener {
         void onItemClicked(int position);
     }
 
-    public void setOnClickListener2(OnItemClickListener listener) {
+    public void setOnClickListener3(SubFavoriteAdapter.OnItemClickListener listener) {
         mListner = listener;
     }
 
-
     @NonNull
     @Override
-    public MainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.recyclerview_main, parent, false);
-        return new MainAdapter.ViewHolder(view);
+        return new SubFavoriteAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         mNews item = mData.get(position);
         Picasso.get().load(item.getImage()).into(holder.ivNewsImage);
         holder.tvNewsTitle.setText(item.getTitle());
-        holder.tvNewsCompany.setText(item.getCompany());
+        holder.tvNewsCompany.setText(item.getDate());//여기서는 회사보다 날짜를 표시하고 싶었음
         holder.tvNewsDate.setText(item.getDate());
         if (mListner != null) {
             holder.cardView.setOnClickListener(new View.OnClickListener() {

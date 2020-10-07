@@ -1,6 +1,12 @@
 package com.bchwangdev.jpnews;
 
-public class mNewsHeader {
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "news")
+public class mNews {
+    @PrimaryKey(autoGenerate = true)
+    private Integer Id;
     private String Image ;
     private String Title;
     private String Content;
@@ -8,8 +14,11 @@ public class mNewsHeader {
     private String Date;
     private String DetailUrl;
 
+    public mNews() {
+    }
+
     //Main화면에서 사용
-    public mNewsHeader(String image, String title, String company, String date, String detailUrl) {
+    public mNews(String image, String title, String company, String date, String detailUrl) {
         Image = image;
         Title = title;
         Company = company;
@@ -18,13 +27,21 @@ public class mNewsHeader {
     }
 
     //Detail화면에서 사용
-    public mNewsHeader(String image, String title, String content, String company, String date, String detailUrl) {
+    public mNews(String image, String title, String content, String company, String date, String detailUrl) {
         Image = image;
         Title = title;
         Content = content;
         Company = company;
         Date = date;
         DetailUrl = detailUrl;
+    }
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
     }
 
     public String getContent() {

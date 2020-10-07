@@ -37,5 +37,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:19.4.0'
     //toolbar hide/show
     implementation 'com.google.android.material:material:1.2.1'
-//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //room
+    implementation 'androidx.room:room-runtime:2.2.5'
+    annotationProcessor 'androidx.room:room-compiler:2.2.5'
 }

@@ -12,7 +12,7 @@
 
         <!-- 툴바표시하기1/2 -->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar2"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorToolbar"
@@ -123,7 +123,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
+            android:id="@+id/adView2"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             ads:adSize="SMART_BANNER"

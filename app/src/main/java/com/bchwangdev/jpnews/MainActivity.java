@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
     ProgressBar progressBar;
     Button btnRefresh;
 
-    AdView mAdView;
+    AdView adView1;
     Toolbar toolbar;
 
     RecyclerView recyclerView;
-    MainAdapter mAdapter;
+    MainAdapter adapter;
 
-    ArrayList<mNewsHeader> arrNewsH = new ArrayList<>();
+    ArrayList<mNews> arrNewsH = new ArrayList<>();
 
     //툴바표시하기
     @Override
@@ -60,13 +60,10 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.btnStar:
-                //폴더 가져오기
-//                Intent myFileIntent = new Intent(this, FolderActivity.class);
-//                startActivityForResult(myFileIntent, 1);
-//                //광고 표시
-//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//                mInterstitialAd.show();
+            case R.id.btnNewsLoad:
+                //▼데이터베이스 페이지 이동
+                Intent intent = new Intent(this, SubFavoriteActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -82,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         btnRefresh = findViewById(R.id.btnRefresh);
 
         //▼툴바
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar1);
         this.setSupportActionBar(toolbar);
 
         //▼인터넷연결확인
@@ -104,16 +101,16 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView = findViewById(R.id.adView);
-        mAdView.loadAd(adRequest);
+        adView1 = findViewById(R.id.adView1);
+        adView1.loadAd(adRequest);
 
         //▼리사이클러뷰 설정
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MainAdapter(arrNewsH);
-        mAdapter.setOnClickListener2(this);
-        recyclerView.setAdapter(mAdapter);
+        adapter = new MainAdapter(arrNewsH);
+        adapter.setOnClickListener2(this);
+        recyclerView.setAdapter(adapter);
 
         //▼데이터가져오기
         JsoupAsyncTask jsoup = new JsoupAsyncTask();
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
     }
 
     @Override
-    public void onTitleClicked(int position) {
+    public void onItemClicked(int position) {
         Intent myDetailIntent = new Intent(this, SubDetailActivity.class);
         myDetailIntent.putExtra("newsDetailUrl", arrNewsH.get(position).getDetailUrl());
         startActivity(myDetailIntent);
@@ -151,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             btnRefresh.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
             progressBar.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
-            mAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -170,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
                     newsCompany = elem.select(".newsFeed_item_media").text();
                     newsDate = elem.select(".newsFeed_item_date").text();
                     newsDetailUrl = elem.select("a").attr("href");
-                    arrNewsH.add(new mNewsHeader(newsImage, newsTitle, newsCompany, newsDate, newsDetailUrl));
+                    arrNewsH.add(new mNews(newsImage, newsTitle, newsCompany, newsDate, newsDetailUrl));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
