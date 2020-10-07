@@ -77,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //▼findViewById
+        progressBar = findViewById(R.id.progressBar);
+        btnRefresh = findViewById(R.id.btnRefresh);
+
+        //▼툴바
+        toolbar = findViewById(R.id.toolbar);
+        this.setSupportActionBar(toolbar);
+
         //▼인터넷연결확인
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() == null) {
@@ -89,10 +97,6 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
             return;
         }
 
-        //▼findViewById
-        progressBar = findViewById(R.id.progressBar);
-        btnRefresh = findViewById(R.id.btnRefresh);
-
         //▼광고
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -102,10 +106,6 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView = findViewById(R.id.adView);
         mAdView.loadAd(adRequest);
-
-        //▼툴바
-        toolbar = findViewById(R.id.toolbar);
-        this.setSupportActionBar(toolbar);
 
         //▼리사이클러뷰 설정
         recyclerView = findViewById(R.id.recyclerView);
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.OnIte
         }
     }
 
-    //크롤링 뉴스헤더 가져오기
+    //▼크롤링 뉴스헤더 가져오기
     protected class JsoupAsyncTask extends AsyncTask {
         @Override
         protected void onPreExecute() {

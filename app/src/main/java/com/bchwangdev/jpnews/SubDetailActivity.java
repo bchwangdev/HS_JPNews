@@ -3,7 +3,6 @@ package com.bchwangdev.jpnews;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -252,7 +251,7 @@ public class SubDetailActivity extends AppCompatActivity {
                     comment.setImage(elem.select("img").attr("src"));
                     comment.setNickName(elem.select(".name").select("a").text());
                     comment.setDate(elem.select("time").text());
-                    comment.setContent(elem.select(".cmtBody").text().replace("<br>", "\n"));
+                    comment.setContent(elem.select(".comment").text().replace("<br>", "\n"));
                     comment.setGood(elem.select(".good").select(".userNum").text());
                     comment.setBad(elem.select(".bad").select(".userNum").text());
                     arrComment.add(comment);

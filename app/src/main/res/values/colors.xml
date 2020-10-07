@@ -8,6 +8,6 @@
     <color name="colorControllerBack">#474A4F</color>
     <color name="colorSeekBar">#28ACE6</color>
     <color name="colorRecyclerView">#2D2F33</color>
-    <color name="colorToolbar">#41A5EE</color>
+    <color name="colorToolbar">#DF3939</color>
     <color name="colorStar">#FFEB3B</color>
 </resources>
