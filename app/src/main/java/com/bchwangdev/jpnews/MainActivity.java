@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainAdapter.OnItemClickListener {
 
-    private final String URL = "https://news.yahoo.co.jp/ranking/access/photo"; //파싱할 홈페이지의 URL주소
+    private final String URL = "https://news.yahoo.co.jp/ranking/access/video"; //파싱할 홈페이지의 URL주소
     private String newsImage, newsTitle, newsCompany, newsDate, newsDetailUrl;
 
     ProgressBar progressBar;

@@ -3,12 +3,16 @@ package com.bchwangdev.jpnews;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -16,7 +20,6 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +62,10 @@ public class SubDetailActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     static float textSize;
 
+    //데이터베이스
+    SQLiteDatabase sqLiteDatabase;
+    String strDbName = "news", strTbName = "news";
+
     //툴바표시하기
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,7 +85,7 @@ public class SubDetailActivity extends AppCompatActivity {
                 if (textSize > 25) textSize = 20;
                 //토스트출력
                 toast.cancel();
-                toast = Toast.makeText(this, "FontSize : "+textSize, Toast.LENGTH_SHORT);
+                toast = Toast.makeText(this, "FontSize : " + textSize, Toast.LENGTH_SHORT);
                 toast.show();
                 //본문 텍스트크기변경
                 tvNewsDContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
@@ -89,7 +96,11 @@ public class SubDetailActivity extends AppCompatActivity {
                 break;
             case R.id.btnStar:
                 //★데이터베이스
-                //
+//                sqLiteDatabase = openOrCreateDatabase(strDbName, MODE_PRIVATE, null);
+//                sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + strTbName +
+//                        "(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                        "Title TEXT, " + "Content TEXT, " +"Image TEXT, "+"Company TEXT, "+"Date TEXT, "+"DetailUrl TEXT, "+
+//                        "grade TEXT);");
                 //폴더 가져오기
 //                Intent myFileIntent = new Intent(this, FolderActivity.class);
 //                startActivityForResult(myFileIntent, 1);
@@ -106,6 +117,14 @@ public class SubDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_detail);
 
+        //▼인터넷연결확인
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getActiveNetworkInfo() == null) {
+            finish();
+            return;
+        }
+
+        //▼findViewById
         ivNewsDImage = findViewById(R.id.ivNewsDImage);
         tvNewsDTitle = findViewById(R.id.tvNewsDTitle);
         tvNewsDContent = findViewById(R.id.tvNewsDContent);
@@ -152,7 +171,7 @@ public class SubDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         detailUrl = intent.getStringExtra("newsDetailUrl");
 
-        //▼리사이클러뷰 설정
+        //▼리사이클러뷰 설정 - 댓글
         recyclerView = findViewById(R.id.recyclerViewComment);
         recyclerView.setHasFixedSize(true);//옵션
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -182,12 +201,13 @@ public class SubDetailActivity extends AppCompatActivity {
             //데이터표시하기
             Picasso.get().load(strNewsDImage).into(ivNewsDImage);
             tvNewsDTitle.setText(strNewsDTitle);
-            tvNewsDContent.setText(strNewsDContent.replace("　", "\n \n"));
+            tvNewsDContent.setText(strNewsDContent.replace("。", "。\n \n").replace("」","」\n \n"));
             tvNewsDCompany.setText(strNewsDCompany);
             tvNewsDDate.setText(strNewsDDate);
             //Url클릭 인터넷 바로 가기
             tvNewsDLink.setText(detailUrl);
             Linkify.addLinks(tvNewsDLink, Linkify.WEB_URLS);
+            sAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -198,10 +218,10 @@ public class SubDetailActivity extends AppCompatActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                //뉴스 가져오기
+                //뉴스 가져오기 (☆동영상가져오려고 했는데 포기)
                 Document doc1 = Jsoup.connect(detailUrl).get();
                 Elements data = doc1.select("article");
-                strNewsDImage = data.select("picture").select("source").attr("srcset");
+                strNewsDImage = doc1.select("meta[property=og:image]").attr("content");
                 strNewsDTitle = data.select(".sc-epnACN").text();
                 strNewsDContent = data.select(".article_body").select("p").select(".sc-gGBfsJ").text();
                 strNewsDDate = data.select("footer").select("time").text();

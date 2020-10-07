@@ -31,7 +31,7 @@ public class SubDetailCommentAdapter extends RecyclerView.Adapter<SubDetailComme
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.recyclerview_comment, parent, false);
+        View view = inflater.inflate(R.layout.recyclerview_sub_comment, parent, false);
         return new SubDetailCommentAdapter.ViewHolder(view);
     }
 
