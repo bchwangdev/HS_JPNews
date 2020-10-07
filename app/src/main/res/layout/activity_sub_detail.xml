@@ -39,13 +39,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- 사진 -->
-                <ImageView
+                <!-- 포토뷰 3/4 -->
+                <com.github.chrisbanes.photoview.PhotoView
                     android:id="@+id/ivNewsDImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY" />
+                    android:paddingTop="30dp"
+                    android:paddingBottom="30dp" />
 
                 <!-- 뉴스본문 -->
                 <LinearLayout

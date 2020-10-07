@@ -20,10 +20,12 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -45,7 +47,7 @@ public class SubDetailActivity extends AppCompatActivity {
     TextView tvNewsDTitle, tvNewsDContent, tvNewsDDate, tvNewsDCompany, tvNewsDLink;
     TextView tvCommentNickName, tvCommentDate, tvCommentContent, tvCommentGood, tvCommentBad;
     TextView tvCommentText1;
-    ImageView ivNewsDImage;
+    PhotoView ivNewsDImage; // 포토뷰 4/4
 
     Toast toast;
 
@@ -108,10 +110,9 @@ public class SubDetailActivity extends AppCompatActivity {
                     temp.setContent(strNewsDContent);
                     temp.setDate(strNewsDDate);
                     temp.setDetailUrl(detailUrl);
-                    long aa = db.mNewsDao().insert(temp);
+                    db.mNewsDao().insert(temp);
                     //툴바 이미지 변경
                     menu.findItem(R.id.btnNewsSave).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_star_black_24dp));
-
                 }else{
                     Toast.makeText(this, "Already Saved", Toast.LENGTH_SHORT).show();
                 }
@@ -192,6 +193,18 @@ public class SubDetailActivity extends AppCompatActivity {
         //▼데이터 가져오기
         SubDetailActivity.JsoupAsyncTask jsoup = new SubDetailActivity.JsoupAsyncTask();
         jsoup.execute();
+
+    }
+
+
+    public void btnClick(View view) {
+        switch (view.getId()) {
+            case R.id.ivNewsDImage:
+//                ViewGroup.LayoutParams params = ivNewsDImage.getLayoutParams();
+//                ivNewsDImage.setLayoutParams(params);
+
+            break;
+        }
     }
 
     //크롤링 뉴스헤더 가져오기

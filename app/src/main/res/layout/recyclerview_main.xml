@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="7dp"
-    android:layout_marginRight="7dp"
+    android:layout_margin="5dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,10 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_gravity="center"
-        app:cardElevation="10dp"
-        app:cardCornerRadius="10dp">
+        app:cardBackgroundColor="@color/colorMainText"
+        app:contentPadding="1dp"
+        app:cardCornerRadius="7dp">
 
         <LinearLayout
+            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -26,7 +25,8 @@
             <ImageView
                 android:id="@+id/ivNewsHImage"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.1"
+                android:scaleType="centerCrop"
                 android:layout_height="match_parent"
                 android:src="@mipmap/ic_launcher" />
 
