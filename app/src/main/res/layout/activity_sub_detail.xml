@@ -1,102 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".SubDetailActivity">
 
-    <!-- 툴바표시하기1/2 -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#41A5EE" />
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
+        <!-- 툴바표시하기1/2 -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="vertical">
+            android:layout_height="?attr/actionBarSize"
+            android:background="#41A5EE"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
-            <!-- 사진 -->
-            <ImageView
-                android:id="@+id/ivNewsDImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <!-- 제목 -->
-            <TextView
-                android:id="@+id/tvNewsDTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="30dp"
-                android:textStyle="bold" />
-
-            <!-- 내용 -->
-            <TextView
-                android:id="@+id/tvNewsDContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:lineSpacingExtra="3dp"
-                android:textSize="24dp" />
-
-            <!-- 회사 -->
-            <TextView
-                android:id="@+id/tvNewsDCompany"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textSize="24dp" />
-
-            <!-- 날짜 -->
-            <TextView
-                android:id="@+id/tvNewsDDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textSize="24dp" />
-
-            <!-- 링크 -->
-            <TextView
-                android:id="@+id/tvNewsDLink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:linksClickable="true"
-                android:textSize="24dp" />
-
-            <!-- 댓글 ★android:nestedScrollingEnabled="false" 중요-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewComment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/recyclerview_comment" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
+    <!-- app:layout_behavior="@string/appbar_scrolling_view_behavior" -->
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-7618046531275376/1822407502" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-</LinearLayout>
+        <!-- ★중요 scrollview쓰면 안됨 -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 사진 -->
+                <ImageView
+                    android:id="@+id/ivNewsDImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <!-- 제목 -->
+                    <TextView
+                        android:id="@+id/tvNewsDTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="30dp"
+                        android:textStyle="bold" />
+
+                    <!-- 회사 -->
+                    <TextView
+                        android:id="@+id/tvNewsDCompany"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24dp" />
+
+                    <!-- 날짜 -->
+                    <TextView
+                        android:id="@+id/tvNewsDDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="40dp"
+                        android:textSize="24dp" />
+
+                    <!-- 본문내용 -->
+                    <!-- 내용 lineSpacingExtra은 줄간격-->
+                    <TextView
+                        android:id="@+id/tvNewsDContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:lineSpacingExtra="3dp"
+                        android:textSize="24dp" />
+
+                    <!-- 링크 -->
+                    <TextView
+                        android:id="@+id/tvNewsDLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:linksClickable="true"
+                        android:textSize="24dp" />
+
+                    <!-- - Comment - -->
+                    <TextView
+                        android:id="@+id/tvCommentText1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="90dp"
+                        android:layout_marginBottom="20dp"
+                        android:text=" - Comment - "
+                        android:textSize="30dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
+
+
+                <!-- 댓글 ★android:nestedScrollingEnabled="false" 중요-->
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:id="@+id/recyclerViewComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/recyclerview_comment" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-7618046531275376/1822407502" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

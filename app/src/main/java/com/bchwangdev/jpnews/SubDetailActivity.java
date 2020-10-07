@@ -15,6 +15,8 @@ import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ public class SubDetailActivity extends AppCompatActivity {
 
     TextView tvNewsDTitle, tvNewsDContent, tvNewsDDate, tvNewsDCompany, tvNewsDLink;
     TextView tvCommentNickName, tvCommentDate, tvCommentContent, tvCommentGood, tvCommentBad;
+    TextView tvCommentText1;
     ImageView ivNewsDImage;
 
     Toast toast;
@@ -71,11 +74,11 @@ public class SubDetailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.btnTextSize:
-                textSize += 1.5;
-                if (textSize > 30) textSize = 20;
+                textSize += 1;
+                if (textSize > 25) textSize = 20;
                 //토스트출력
                 toast.cancel();
-                toast = Toast.makeText(this, textSize + "", Toast.LENGTH_SHORT);
+                toast = Toast.makeText(this, "FontSize : "+textSize, Toast.LENGTH_SHORT);
                 toast.show();
                 //본문 텍스트크기변경
                 tvNewsDContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
@@ -86,6 +89,7 @@ public class SubDetailActivity extends AppCompatActivity {
                 break;
             case R.id.btnStar:
                 //★데이터베이스
+                //
                 //폴더 가져오기
 //                Intent myFileIntent = new Intent(this, FolderActivity.class);
 //                startActivityForResult(myFileIntent, 1);
@@ -113,6 +117,7 @@ public class SubDetailActivity extends AppCompatActivity {
         tvCommentContent = findViewById(R.id.tvCommentContent);
         tvCommentGood = findViewById(R.id.tvCommentGood);
         tvCommentBad = findViewById(R.id.tvCommentBad);
+        tvCommentText1 = findViewById(R.id.tvCommentText1);
         toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         //▼프리퍼런스 설정정보
@@ -126,7 +131,7 @@ public class SubDetailActivity extends AppCompatActivity {
         tvNewsDCompany.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
         tvNewsDLink.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
 
-        //광고
+        //▼광고
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -136,18 +141,18 @@ public class SubDetailActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         mAdView.loadAd(adRequest);
 
-        //툴바
+        //▼툴바
         toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setTitle("");
 
-        //인텐트 가져오기
+        //▼인텐트 가져오기
         Intent intent = getIntent();
         detailUrl = intent.getStringExtra("newsDetailUrl");
 
-        //리사이클러뷰 설정
+        //▼리사이클러뷰 설정
         recyclerView = findViewById(R.id.recyclerViewComment);
         recyclerView.setHasFixedSize(true);//옵션
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -157,7 +162,7 @@ public class SubDetailActivity extends AppCompatActivity {
         sAdapter = new SubDetailCommentAdapter(arrComment);
         recyclerView.setAdapter(sAdapter);
 
-        //데이터 가져오기
+        //▼데이터 가져오기
         SubDetailActivity.JsoupAsyncTask jsoup = new SubDetailActivity.JsoupAsyncTask();
         jsoup.execute();
     }
@@ -167,11 +172,14 @@ public class SubDetailActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            tvCommentText1.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            tvCommentText1.setVisibility(View.VISIBLE);
+            //데이터표시하기
             Picasso.get().load(strNewsDImage).into(ivNewsDImage);
             tvNewsDTitle.setText(strNewsDTitle);
             tvNewsDContent.setText(strNewsDContent.replace("　", "\n \n"));
@@ -195,9 +203,9 @@ public class SubDetailActivity extends AppCompatActivity {
                 Elements data = doc1.select("article");
                 strNewsDImage = data.select("picture").select("source").attr("srcset");
                 strNewsDTitle = data.select(".sc-epnACN").text();
-                strNewsDContent = data.select(".article_body").select("p").text();
-                strNewsDCompany = data.select("footer").select("time").text();
-                strNewsDDate = data.select("footer").select("a").text();
+                strNewsDContent = data.select(".article_body").select("p").select(".sc-gGBfsJ").text();
+                strNewsDDate = data.select("footer").select("time").text();
+                strNewsDCompany = data.select("footer").select("a").text();
 
                 //일단 코멘트페이지 들어가서 iFrameUrl을 만들 정보를 가져와야함
                 commentUrl = doc1.select("meta[property=og:url]").attr("content") + "/comments";
